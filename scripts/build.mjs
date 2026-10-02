@@ -89,7 +89,9 @@ for (const file of ['index.html', 'sitemap.xml', 'robots.txt']) {
   text = text.replaceAll(DEFAULT_SITE_URL, siteUrl)
   if (file === 'sitemap.xml') text = text.replace(/<lastmod>[^<]*<\/lastmod>/g, `<lastmod>${today}</lastmod>`)
   if (file === 'index.html' && verification.length) {
-    const tags = verification.map((tag) => `    ${tag}\n`).join('')
+    // não duplica uma meta tag que já esteja escrita no index.html
+    const missing = verification.filter((tag) => !text.includes(tag.match(/name="[^"]+"/)[0]))
+    const tags = missing.map((tag) => `    ${tag}\n`).join('')
     text = text.replace('</head>', () => `${tags}  </head>`)
   }
   await writeFile(path, text)
