@@ -59,6 +59,7 @@ O botão **Exportar WebM** grava o vídeo com áudio e baixa o arquivo `claudex-
 
 ```
 index.html          Página principal
+public/icon.png     Ícone do Claudex (cabeçalho, vídeo e favicon)
 vite.config.js      Configuração do Vite (plugin React)
 scripts/build.mjs   Build alternativo com Rollup + Babel
 src/
@@ -78,6 +79,14 @@ src/
 - **Landing page:** `src/Landing.jsx` (textos e listas no topo do arquivo) e `src/landing.css`.
 
 Ao mudar a duração de uma cena, ajuste também os tempos dos sons dela em `src/sound.js`.
+
+## Publicar e SEO
+
+- O `npm run build` **pré-renderiza** o HTML (conteúdo visível sem JavaScript, importante para buscadores). Para publicar, use sempre `npm run build`; o `npx vite build` não pré-renderiza.
+- O workflow `.github/workflows/pages.yml` publica `dist/` no GitHub Pages a cada push na `main`. No repositório, em **Settings → Pages**, escolha **Source: GitHub Actions**.
+- **Vercel:** o `vercel.json` já define o build. Configure `SITE_URL` (endereço final) e `GOOGLE_SITE_VERIFICATION` (código do Search Console) em Settings → Environment Variables. Passo a passo em [docs/SEO.md](docs/SEO.md#30-vercel--google-search-console-passo-a-passo).
+- Sem `SITE_URL`, o build usa o domínio da Vercel ou, fora dela, `https://diegoherreradasilva.github.io/site-claudex/` (GitHub Pages).
+- Metadados, dados estruturados, `robots.txt`, `sitemap.xml`, imagem de compartilhamento e o passo a passo do Search Console estão em [docs/SEO.md](docs/SEO.md).
 
 ## Sobre o Claudex
 

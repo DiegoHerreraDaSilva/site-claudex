@@ -5,7 +5,7 @@ import { advanceMusic, advanceSound, recordingTrack, setMuted as setAudioMuted, 
 
 export default function App() {
   const canvasRef = useRef(null)
-  const startAt = Number(new URLSearchParams(window.location.search).get('t')) || 0
+  const startAt = typeof window === 'undefined' ? 0 : Number(new URLSearchParams(window.location.search).get('t')) || 0
   const clockRef = useRef({ time: startAt, playing: false, last: 0 })
   const [time, setTime] = useState(startAt)
   const [playing, setPlaying] = useState(false)
@@ -150,7 +150,7 @@ export default function App() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <a className="brand" href="#video" aria-label="Claudex, voltar ao topo"><span className="brand-mark">✳</span><span>CLAUDEX</span></a>
+        <a className="brand" href="#video" aria-label="Claudex, voltar ao topo"><img className="brand-icon" src="icon.png" alt="" width="32" height="32" /><span>CLAUDEX</span></a>
         <nav className="topnav" aria-label="Seções">
           <a href="#video">Vídeo</a>
           <a href="#recursos">Recursos</a>
@@ -162,8 +162,8 @@ export default function App() {
       </header>
       <div className="content" id="video">
         <div className="project-header">
-          <div><div className="eyebrow">PROJETO / 01</div><h1>Claudex <span>em movimento.</span></h1><p>Escreva o pedido, o Jev escolhe o modelo e uma equipe trabalha direto na sua pasta.</p></div>
-          <a className="repo-link" href="https://github.com/DiegoHerreraDaSilva/claudex" target="_blank" rel="noreferrer">VER REPOSITÓRIO ↗</a>
+          <div><div className="eyebrow">PROJETO / 01</div><h1>Claudex: <span>uma equipe de IA direto na sua pasta.</span></h1><p>App desktop local que coordena Claude Code e Codex. Você escreve o pedido, o Jev escolhe o modelo e os agentes trabalham em paralelo, sem Git.</p></div>
+          <a className="repo-link" href="https://github.com/DiegoHerreraDaSilva/claudex" target="_blank" rel="noopener noreferrer">VER REPOSITÓRIO ↗</a>
         </div>
         <section className="player" ref={playerRef} aria-label="Vídeo de apresentação do Claudex">
           <canvas ref={canvasRef} width="1920" height="1080" aria-label={`Cena: ${current.label}`} />
@@ -201,6 +201,14 @@ export default function App() {
             </button>
           ))}
         </nav>
+        <details className="transcript">
+          <summary>Transcrição do vídeo</summary>
+          <ol>
+            {TRANSCRIPT.map(([title, text], index) => (
+              <li key={title}><strong>{formatTime(SCENES[index]?.at ?? 0)} · {title}.</strong> {text}</li>
+            ))}
+          </ol>
+        </details>
         <p className="shortcuts">ATALHOS: <kbd>Espaço</kbd> play/pausa · <kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>0</kbd> reiniciar</p>
         <a className="scroll-hint" href="#recursos">ROLE PARA CONHECER O CLAUDEX ↓</a>
       </div>
@@ -208,6 +216,18 @@ export default function App() {
     </main>
   )
 }
+
+// Texto do vídeo em HTML: o canvas não é lido por buscadores nem por leitores de tela.
+const TRANSCRIPT = [
+  ['Claudex', 'O ícone do Claudex aparece com o convite: escreva o que você precisa. O Jev escolhe o modelo e uma equipe trabalha na sua pasta.'],
+  ['Escreva o pedido', 'Na janela do app, qualquer pasta vira projeto. O pedido "Adicione login ao site e escreva os testes" é digitado num único campo, e a sessão do Claude Sonnet lê e grava os arquivos até responder: login criado, testes adicionados.'],
+  ['Jev escolhe o modelo', 'Cada pedido recebe um papel. Mudanças simples vão para o Claude Sonnet, implementação para o Codex e arquitetura para o Claude Opus, configuráveis por DEFAULT_SIMPLE_MODEL, DEFAULT_COMPLEX_MODEL e DEFAULT_PLANNER_MODEL. Sem a chave do Jev, o roteamento local assume e a interface avisa.'],
+  ['Equipe coordenada', 'Um coordenador Claude Opus divide o trabalho: Codex implementa o login em src/auth, um Claude Sonnet escreve os testes e outro atualiza a documentação. São até 4 agentes ativos, 2 níveis de delegação e áreas sem sobreposição. O coordenador reúne tudo e responde uma vez.'],
+  ['Direto na sua pasta', 'As mudanças vão direto para a pasta do projeto, sem worktrees, branches, revisões ou botão Aplicar. Um registro compartilhado guarda pedidos, resultados, decisões, caminhos alterados e mudanças manuais. Funciona em qualquer pasta, mesmo sem Git.'],
+  ['Terminal e controle', 'Cada projeto tem seu terminal PowerShell ou Bash na pasta certa, como no npm test com todos os testes passando. As sessões por modelo retomam o contexto ao reabrir, e "Parar agente" interrompe a equipe mantendo os arquivos.'],
+  ['Assinatura ou API', 'Use a assinatura mensal do Claude e do Codex, entrando com o login oficial, ou chaves de API da Anthropic e da OpenAI com cobrança por uso. Se houver uma chave de API, ela tem prioridade sobre o login.'],
+  ['Peça. Acompanhe. Pronto.', 'Claude Code, Jev e Codex juntos. Para começar, rode npm run app. O código está em github.com/DiegoHerreraDaSilva/claudex.'],
+]
 
 function formatTime(seconds) {
   const s = Math.floor(seconds)

@@ -23,8 +23,15 @@ const MONO = '"Cascadia Mono", Consolas, "SFMono-Regular", monospace'
 const C = {
   bg: '#0a1012', panel: '#131d20', panel2: '#192528', line: '#2d3e3d',
   white: '#f1f5f1', mute: '#9fb2ab', dim: '#6c8179',
-  orange: '#ff8461', mint: '#7fe0b0', blue: '#7db8ff', violet: '#c3a6ff', red: '#ff7b7b', gold: '#f2c96b',
+  accent: '#5cc4ec', mint: '#7fe0b0', blue: '#7db8ff', violet: '#c3a6ff', red: '#ff7b7b', gold: '#f2c96b',
 }
+
+// Ícone oficial do Claudex (public/icon.png). Se ainda não carregou, desenha o logo antigo.
+const ICON_SRC = 'icon.png'
+let iconImg = null
+if (typeof Image !== 'undefined') { iconImg = new Image(); iconImg.src = ICON_SRC }
+const iconReady = () => Boolean(iconImg && iconImg.complete && iconImg.naturalWidth)
+const TEAL = '#46b7e4'
 
 const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n))
 const easeOut = (n) => 1 - (1 - clamp(n)) ** 3
@@ -55,7 +62,7 @@ function width(g, value, size, weight = 500, mono = false) {
   g.font = `${weight} ${size}px ${mono ? MONO : SANS}`
   return g.measureText(value).width
 }
-function kicker(g, value, x, y, color = C.orange, align = 'left') { tx(g, value, x, y, 24, color, 600, align, true) }
+function kicker(g, value, x, y, color = C.accent, align = 'left') { tx(g, value, x, y, 24, color, 600, align, true) }
 function chip(g, value, x, y, color = C.mint, size = 24, padX = 26) {
   const w = width(g, value, size, 600, true) + padX * 2
   rr(g, x, y, w, 56, 28, color + '22', color + '88', 2)
@@ -88,11 +95,11 @@ function backdrop(g, t) {
   for (let y = 0; y < H; y += 80) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke() }
 }
 function chrome(g, t) {
-  circle(g, 96, 62, 17, C.orange)
-  tx(g, '✳', 96, 72, 24, '#102020', 700, 'center')
-  tx(g, 'CLAUDEX', 128, 70, 26, C.white, 700)
+  if (iconReady()) g.drawImage(iconImg, 72, 36, 52, 52)
+  else { circle(g, 96, 62, 17, C.accent); tx(g, '✳', 96, 72, 24, '#102020', 700, 'center') }
+  tx(g, 'CLAUDEX', 136, 70, 26, C.white, 700)
   tx(g, 'APP DESKTOP LOCAL  ·  SEM GIT', 1824, 68, 20, C.dim, 500, 'right', true)
-  rr(g, 0, H - 8, W * (t / DURATION), 8, 0, C.orange)
+  rr(g, 0, H - 8, W * (t / DURATION), 8, 0, C.accent)
 }
 
 function scene(g, local, dur, draw, last) {
@@ -112,13 +119,16 @@ function sIntro(g, t) {
     const r = 250 + (i * 37) % 420 + Math.sin(t * .6 + i) * 18
     const x = 960 + Math.cos(a) * r * 1.5
     const y = 470 + Math.sin(a) * r * .75
-    circle(g, x, y, 3 + (i % 3), i % 4 === 0 ? C.orange + 'aa' : '#ffffff22')
+    circle(g, x, y, 3 + (i % 3), i % 4 === 0 ? TEAL + 'aa' : '#ffffff22')
   }
   const k = easeOut(prog(t, .2, 1.2))
   g.save(); g.translate(960, 330); g.scale(k, k); g.rotate((1 - k) * -.9)
-  for (let i = 0; i < 3; i++) circle(g, 0, 0, 150 + i * 62 + Math.sin(t * 1.4 + i) * 6, null, C.orange + (i === 0 ? '88' : '33'), 2)
-  glow(g, C.orange, 60, () => circle(g, 0, 0, 108, C.orange))
-  tx(g, '✳', 0, 46, 150, '#102020', 700, 'center')
+  for (let i = 0; i < 3; i++) circle(g, 0, 0, 170 + i * 62 + Math.sin(t * 1.4 + i) * 6, null, TEAL + (i === 0 ? '88' : '33'), 2)
+  if (iconReady()) glow(g, TEAL, 70, () => g.drawImage(iconImg, -130, -130, 260, 260))
+  else {
+    glow(g, C.accent, 60, () => circle(g, 0, 0, 108, C.accent))
+    tx(g, '✳', 0, 46, 150, '#102020', 700, 'center')
+  }
   g.restore()
   const w = easeOut(prog(t, .8, 1.8))
   g.save(); g.globalAlpha = w; g.translate(0, (1 - w) * 40)
@@ -128,7 +138,7 @@ function sIntro(g, t) {
   g.save(); g.globalAlpha = l1
   tx(g, 'Escreva o que você precisa.', 960, 766, 48, C.mute, 400, 'center'); g.restore()
   g.save(); g.globalAlpha = l2
-  tx(g, 'Jev escolhe o modelo. Uma equipe trabalha na sua pasta.', 960, 830, 48, C.orange, 500, 'center'); g.restore()
+  tx(g, 'Jev escolhe o modelo. Uma equipe trabalha na sua pasta.', 960, 830, 48, C.accent, 500, 'center'); g.restore()
 }
 
 // ---------- 2. Pedido ----------
@@ -140,13 +150,13 @@ function sRequest(g, t) {
   // sidebar
   g.fillStyle = '#0f171a'; g.fillRect(X + 2, Y + 62, 360, HH - 64)
   tx(g, 'PROJETOS', X + 32, Y + 112, 20, C.dim, 600, 'left', true)
-  tx(g, '+', X + 330, Y + 114, 34, C.orange, 600, 'center')
+  tx(g, '+', X + 330, Y + 114, 34, C.accent, 600, 'center')
   const projs = ['meu-site', 'relatorio-vendas', 'api-pagamentos']
   projs.forEach((p, i) => {
     const y = Y + 140 + i * 74
     const on = i === 0
-    if (on) rr(g, X + 18, y, 330, 58, 12, C.orange + '22', C.orange + '66')
-    tx(g, '▣', X + 44, y + 38, 26, on ? C.orange : C.dim, 500, 'center')
+    if (on) rr(g, X + 18, y, 330, 58, 12, C.accent + '22', C.accent + '66')
+    tx(g, '▣', X + 44, y + 38, 26, on ? C.accent : C.dim, 500, 'center')
     tx(g, p, X + 74, y + 38, 26, on ? C.white : C.mute, on ? 600 : 400)
   })
   tx(g, 'Qualquer pasta vira projeto.', X + 32, Y + HH - 60, 20, C.mute, 400)
@@ -156,9 +166,9 @@ function sRequest(g, t) {
   const msg = 'Adicione login ao site e escreva os testes'
   const shown = typed(msg, t, 1.0, 16)
   tx(g, shown, bx + 32, by + 68, 34, C.white, 400)
-  if (t < 4.1 && Math.floor(t * 2.4) % 2 === 0) rr(g, bx + 36 + width(g, shown, 34, 400), by + 30, 3, 50, 0, C.orange)
+  if (t < 4.1 && Math.floor(t * 2.4) % 2 === 0) rr(g, bx + 36 + width(g, shown, 34, 400), by + 30, 3, 50, 0, C.accent)
   const press = t > 3.5 && t < 3.8
-  rr(g, bx + 1230 - 270, by + 22, 240, 68, 14, press ? '#ffb39d' : C.orange)
+  rr(g, bx + 1230 - 270, by + 22, 240, 68, 14, press ? '#a5dcf4' : C.accent)
   tx(g, 'Enviar pedido', bx + 1230 - 150, by + 66, 26, '#1b0f0b', 700, 'center')
   tx(g, 'Ctrl + Enter também envia', bx + 1230 - 30, by + 150, 20, C.dim, 400, 'right', true)
   chip(g, 'C:\\Projetos\\meu-site', bx, by + 128, C.blue, 20, 20)
@@ -169,7 +179,7 @@ function sRequest(g, t) {
   rr(g, bx + 28, Y + 352, 300, 46, 23, C.mint + '22', C.mint + '77')
   tx(g, '● claude · sonnet', bx + 178, Y + 383, 21, C.mint, 600, 'center', true)
   const lines = [
-    ['Jev', 'classificou o pedido: implementação', C.orange],
+    ['Jev', 'classificou o pedido: implementação', C.accent],
     ['ferramenta', 'Read  src/app/login.ts', C.mute],
     ['ferramenta', 'Write  src/auth/session.ts', C.mute],
     ['resultado', 'Login criado, testes adicionados.', C.mint],
@@ -206,8 +216,8 @@ function sRouting(g, t) {
   g.restore()
   // jev
   const pulse = 1
-  glow(g, C.orange, 40, () => rr(g, 760, 480, 400, 110, 24, C.panel, C.orange, 3))
-  circle(g, 810, 535, 14, C.orange)
+  glow(g, C.accent, 40, () => rr(g, 760, 480, 400, 110, 24, C.panel, C.accent, 3))
+  circle(g, 810, 535, 14, C.accent)
   tx(g, 'JEV', 850, 551, 44 * pulse, C.white, 700)
   tx(g, 'roteador', 1010, 548, 22, C.mute, 400, 'left', true)
   // cards
@@ -292,8 +302,8 @@ function sTeam(g, t) {
   // messages
   if (t > 2.2) {
     const m = (t * .7) % 1
-    circle(g, 760, lerp(615, 420, m), 7, C.orange)
-    circle(g, 760, lerp(615, 800, (m + .5) % 1), 7, C.orange)
+    circle(g, 760, lerp(615, 420, m), 7, C.accent)
+    circle(g, 760, lerp(615, 800, (m + .5) % 1), 7, C.accent)
   }
   // limits
   const lim = easeOut(prog(t, 4.6, 5.4))
@@ -343,7 +353,7 @@ function sFolder(g, t) {
   const mem = easeOut(prog(t, 3.2, 4.0))
   g.save(); g.globalAlpha = mem; g.translate((1 - mem) * 40, 0)
   rr(g, 1070, 310, 730, 330, 22, C.panel, C.line, 2)
-  tx(g, 'REGISTRO COMPARTILHADO', 1106, 366, 22, C.orange, 600, 'left', true)
+  tx(g, 'REGISTRO COMPARTILHADO', 1106, 366, 22, C.accent, 600, 'left', true)
   ;[['pedidos e resultados', 0], ['decisões comunicadas', 1], ['caminhos alterados', 2], ['mudanças manuais detectadas', 3]].forEach(([s, i]) => {
     tx(g, '•', 1106, 436 + i * 56, 30, C.mint, 600)
     tx(g, s, 1142, 436 + i * 56, 30, C.white, 400)
@@ -377,7 +387,7 @@ function sTerminal(g, t) {
   tx(g, 'Acompanhe tudo, no seu ritmo.', 120, 246, 70, C.white, 700)
   const X = 120, Y = 310, WW = 1180, HH = 660
   windowFrame(g, X, Y, WW, HH, null)
-  const tabs = [['Coordenador', C.violet], ['Codex · auth', C.blue], ['Sonnet · docs', C.mint], ['Terminal', C.orange]]
+  const tabs = [['Coordenador', C.violet], ['Codex · auth', C.blue], ['Sonnet · docs', C.mint], ['Terminal', C.accent]]
   let tx0 = X + 130
   tabs.forEach(([n, col], i) => {
     const w = width(g, n, 22, 600, true) + 36
@@ -410,7 +420,7 @@ function sTerminal(g, t) {
   if (Math.floor(t * 2.4) % 2 === 0 && t > 4.2) rr(g, X + 36 + width(g, prompt, 28, 400, true), Y + 330 + 0, 14, 30, 0, C.white)
   // side points
   const pts = [
-    ['Um terminal por projeto', 'PowerShell ou Bash, na pasta certa.', C.orange],
+    ['Um terminal por projeto', 'PowerShell ou Bash, na pasta certa.', C.accent],
     ['Sessões por modelo', 'O contexto é retomado ao reabrir.', C.blue],
     ['Parar agente', 'Interrompe a equipe; arquivos ficam.', C.red],
   ]
@@ -454,7 +464,7 @@ function sAccounts(g, t) {
   const o = easeOut(prog(t, 1.6, 2.2))
   g.save(); g.globalAlpha = o
   circle(g, 960, 620, 54, C.bg, C.line, 3)
-  tx(g, 'ou', 960, 634, 36, C.orange, 700, 'center', true)
+  tx(g, 'ou', 960, 634, 36, C.accent, 700, 'center', true)
   g.restore()
   const n = easeOut(prog(t, 3.6, 4.4))
   g.save(); g.globalAlpha = n
@@ -466,14 +476,14 @@ function sAccounts(g, t) {
 function sEnd(g, t) {
   tx(g, 'Peça.', 960, 340, 150, C.white, 700, 'center')
   const a2 = easeOut(prog(t, .5, 1.2)), a3 = easeOut(prog(t, 1.0, 1.7))
-  g.save(); g.globalAlpha = a2; tx(g, 'Acompanhe.', 960, 490, 150, C.orange, 700, 'center'); g.restore()
+  g.save(); g.globalAlpha = a2; tx(g, 'Acompanhe.', 960, 490, 150, C.accent, 700, 'center'); g.restore()
   g.save(); g.globalAlpha = a3; tx(g, 'Pronto.', 960, 640, 150, C.white, 700, 'center'); g.restore()
   const a4 = easeOut(prog(t, 1.8, 2.5))
   g.save(); g.globalAlpha = a4
   let w1 = width(g, 'CLAUDE CODE', 24, 600, true) + 52, w2 = width(g, 'JEV', 24, 600, true) + 52, w3 = width(g, 'CODEX', 24, 600, true) + 52
   let x = 960 - (w1 + w2 + w3 + 32) / 2
   x += chip(g, 'CLAUDE CODE', x, 714, C.mint) + 16
-  x += chip(g, 'JEV', x, 714, C.orange) + 16
+  x += chip(g, 'JEV', x, 714, C.accent) + 16
   chip(g, 'CODEX', x, 714, C.blue)
   rr(g, 700, 810, 520, 70, 16, '#0d1517', C.line)
   tx(g, '$ npm run app', 960, 856, 32, C.white, 500, 'center', true)

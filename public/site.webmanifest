@@ -1,0 +1,14 @@
+{
+  "name": "Claudex — equipe de agentes de IA na sua pasta",
+  "short_name": "Claudex",
+  "description": "App desktop local que coordena Claude Code e Codex, direto na sua pasta.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080b0d",
+  "theme_color": "#080b0d",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+  ]
+}

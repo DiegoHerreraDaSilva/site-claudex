@@ -19,5 +19,8 @@
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@vitejs/plugin-react": "^5.0.0",
     "vite": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20.19"
   }
 }

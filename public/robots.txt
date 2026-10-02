@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://diegoherreradasilva.github.io/site-claudex/sitemap.xml

@@ -3,12 +3,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>document.documentElement.classList.add('js')</script>
+
+    <!-- SEO principal -->
+    <title>Claudex — equipe de agentes de IA (Claude Code + Codex) direto na sua pasta</title>
+    <meta name="description" content="Claudex é um app desktop local que coordena Claude Code e Codex: você escreve o pedido, o Jev escolhe o modelo e uma equipe de agentes trabalha direto na sua pasta, sem Git. Use sua assinatura ou sua API." />
+    <link rel="canonical" href="https://diegoherreradasilva.github.io/site-claudex/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Diego Herrera da Silva" />
+    <link rel="alternate" hreflang="pt-BR" href="https://diegoherreradasilva.github.io/site-claudex/" />
+    <link rel="alternate" hreflang="x-default" href="https://diegoherreradasilva.github.io/site-claudex/" />
+
+    <!-- Ícones e PWA -->
     <meta name="theme-color" content="#080b0d" />
-    <meta name="description" content="Apresentação animada em código do projeto Claudex." />
-    <title>Claudex — Apresentação em movimento</title>
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" type="image/png" sizes="1024x1024" href="icon.png" />
+    <link rel="apple-touch-icon" href="icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+
+    <!-- Open Graph (WhatsApp, LinkedIn, Facebook, Slack, Discord) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Claudex" />
+    <meta property="og:title" content="Claudex — uma equipe de IA trabalhando direto na sua pasta" />
+    <meta property="og:description" content="Escreva o pedido. O Jev escolhe entre Claude Sonnet, Codex e Claude Opus, e os agentes trabalham em paralelo na sua pasta. Assinatura ou API." />
+    <meta property="og:url" content="https://diegoherreradasilva.github.io/site-claudex/" />
+    <meta property="og:image" content="https://diegoherreradasilva.github.io/site-claudex/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Ícone do Claudex com o texto: uma equipe de IA direto na sua pasta" />
+
+    <!-- X / Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Claudex — uma equipe de IA trabalhando direto na sua pasta" />
+    <meta name="twitter:description" content="App desktop local que coordena Claude Code e Codex. Sem Git, com assinatura ou API." />
+    <meta name="twitter:image" content="https://diegoherreradasilva.github.io/site-claudex/og-image.png" />
+    <meta name="twitter:image:alt" content="Ícone do Claudex com o texto: uma equipe de IA direto na sua pasta" />
+
+    <!-- Dados estruturados do site e do software (o FAQPage é gerado pela landing, a partir do mesmo conteúdo do FAQ) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://diegoherreradasilva.github.io/site-claudex/#website",
+            "url": "https://diegoherreradasilva.github.io/site-claudex/",
+            "name": "Claudex",
+            "inLanguage": "pt-BR",
+            "publisher": { "@id": "https://diegoherreradasilva.github.io/site-claudex/#author" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://diegoherreradasilva.github.io/site-claudex/#author",
+            "name": "Diego Herrera da Silva",
+            "url": "https://github.com/DiegoHerreraDaSilva"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://diegoherreradasilva.github.io/site-claudex/#app",
+            "name": "Claudex",
+            "description": "App desktop local que coordena Claude Code e Codex. O roteador Jev escolhe o modelo para cada pedido e uma equipe de agentes trabalha direto na pasta do projeto, sem Git.",
+            "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "Agentes de IA para programação",
+            "operatingSystem": "Windows",
+            "softwareRequirements": "Node.js; Claude Code e/ou Codex com assinatura ou chave de API",
+            "license": "https://opensource.org/licenses/MIT",
+            "isAccessibleForFree": true,
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+            "image": "https://diegoherreradasilva.github.io/site-claudex/icon.png",
+            "screenshot": "https://diegoherreradasilva.github.io/site-claudex/og-image.png",
+            "url": "https://diegoherreradasilva.github.io/site-claudex/",
+            "downloadUrl": "https://github.com/DiegoHerreraDaSilva/claudex",
+            "codeRepository": "https://github.com/DiegoHerreraDaSilva/claudex",
+            "author": { "@id": "https://diegoherreradasilva.github.io/site-claudex/#author" },
+            "inLanguage": "pt-BR"
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="color:#e9edf1;font-family:Arial,sans-serif;padding:24px">O vídeo de apresentação precisa de JavaScript. O código-fonte do Claudex está em <a style="color:#7fe0b0" href="https://github.com/DiegoHerreraDaSilva/claudex">github.com/DiegoHerreraDaSilva/claudex</a>.</p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

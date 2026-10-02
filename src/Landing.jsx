@@ -8,7 +8,7 @@ const FEATURES = [
     tag: '01',
     title: 'Um campo. Um pedido.',
     text: 'Qualquer pasta vira projeto. Você escreve o que precisa em linguagem natural e envia, com o botão ou Ctrl + Enter.',
-    accent: 'orange',
+    accent: 'brand',
   },
   {
     tag: '02',
@@ -69,6 +69,13 @@ const FAQ = [
   ['Consigo interromper no meio?', 'Sim. "Parar agente" interrompe a equipe na hora, e o que já foi escrito continua nos arquivos.'],
 ]
 
+const FAQ_JSON_LD = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: 'pt-BR',
+  mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+}).replace(/</g, '\\u003c')
+
 const INSTALL = `git clone ${REPO}.git
 cd claudex
 npm install
@@ -114,6 +121,8 @@ export default function Landing() {
 
   return (
     <div className="landing" ref={ref}>
+      {/* FAQPage em JSON-LD gerado do mesmo conteúdo do FAQ visível, para nunca ficarem diferentes. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: FAQ_JSON_LD }} />
       {/* Manifesto */}
       <section className="lp-section lp-manifesto" aria-labelledby="manifesto-title">
         <p className="lp-kicker" data-reveal>POR QUE CLAUDEX</p>
@@ -274,19 +283,19 @@ export default function Landing() {
         <h2 id="cta-title">Peça. <span>Acompanhe.</span> Pronto.</h2>
         <p>Abra uma pasta e escreva o primeiro pedido.</p>
         <div className="lp-cta-actions">
-          <a className="lp-btn primary" href={REPO} target="_blank" rel="noreferrer">VER NO GITHUB ↗</a>
+          <a className="lp-btn primary" href={REPO} target="_blank" rel="noopener noreferrer">VER NO GITHUB ↗</a>
           <a className="lp-btn ghost" href="#comecar">COMO INSTALAR</a>
         </div>
       </section>
 
       <footer className="lp-footer">
-        <div className="brand"><span className="brand-mark">✳</span><span>CLAUDEX</span></div>
+        <div className="brand"><img className="brand-icon" src="icon.png" alt="" width="32" height="32" /><span>CLAUDEX</span></div>
         <nav aria-label="Rodapé">
           <a href="#video">Vídeo</a>
           <a href="#recursos">Recursos</a>
           <a href="#como-funciona">Como funciona</a>
           <a href="#faq">FAQ</a>
-          <a href={REPO} target="_blank" rel="noreferrer">GitHub</a>
+          <a href={REPO} target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
         <span className="lp-footer-note">VÍDEO GERADO EM CANVAS + REACT · SEM ASSETS EXTERNOS</span>
       </footer>
