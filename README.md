@@ -83,9 +83,8 @@ Ao mudar a duração de uma cena, ajuste também os tempos dos sons dela em `src
 ## Publicar e SEO
 
 - O `npm run build` **pré-renderiza** o HTML (conteúdo visível sem JavaScript, importante para buscadores). Para publicar, use sempre `npm run build`; o `npx vite build` não pré-renderiza.
-- O workflow `.github/workflows/pages.yml` publica `dist/` no GitHub Pages a cada push na `main`. No repositório, em **Settings → Pages**, escolha **Source: GitHub Actions**.
 - **Vercel:** o `vercel.json` já define o build. Configure `SITE_URL` (endereço final) e `GOOGLE_SITE_VERIFICATION` (código do Search Console) em Settings → Environment Variables. Passo a passo em [docs/SEO.md](docs/SEO.md#30-vercel--google-search-console-passo-a-passo).
-- Sem `SITE_URL`, o build usa o domínio da Vercel ou, fora dela, `https://diegoherreradasilva.github.io/site-claudex/` (GitHub Pages).
+- O endereço padrão do site é `https://site-claudex.vercel.app/`. Se você ligar um domínio próprio, defina `SITE_URL` com ele na Vercel.
 - Metadados, dados estruturados, `robots.txt`, `sitemap.xml`, imagem de compartilhamento e o passo a passo do Search Console estão em [docs/SEO.md](docs/SEO.md).
 
 ## Sobre o Claudex

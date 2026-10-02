@@ -2,7 +2,7 @@
 
 Este documento descreve a arquitetura de SEO do site, o que já está implementado no código e o que precisa ser feito fora dele (publicação, Search Console, divulgação).
 
-URL considerada canônica: **https://diegoherreradasilva.github.io/site-claudex/** (GitHub Pages do repositório `site-claudex`). Se o site for publicado em outro endereço ou ganhar domínio próprio, troque essa URL em todos os pontos listados em [Onde a URL aparece](#onde-a-url-aparece).
+URL canônica (a "oficial" da página, que o Google deve indexar): é definida no build pela variável `SITE_URL` (veja a seção 3.0). Sem ela, o padrão é `https://site-claudex.vercel.app/`. Os pontos onde a URL aparece estão em [Onde a URL aparece](#onde-a-url-aparece).
 
 ---
 
@@ -75,7 +75,7 @@ O site é React e o vídeo é desenhado num `<canvas>`. Sem tratamento, o HTML e
 | `site.webmanifest` | Nome, cores e ícone para instalação e para a aba do navegador. |
 | `og-image.png` | Imagem de compartilhamento. A fonte está em `scripts/og/og-image.html`. |
 
-> **Limitação do GitHub Pages em subpasta:** buscadores só leem `robots.txt` na raiz do domínio (`diegoherreradasilva.github.io/robots.txt`), não em `/site-claudex/robots.txt`. Por isso o sitemap precisa ser **enviado manualmente** no Search Console (passo 3.2). Com domínio próprio, essa limitação some.
+> **Na Vercel o site fica na raiz do domínio** (`site-claudex.vercel.app/`), então `robots.txt` e `sitemap.xml` são lidos normalmente. Mesmo assim, envie o sitemap no Search Console (passo 3.0).
 
 ### 2.6 Desempenho (Core Web Vitals)
 
@@ -105,7 +105,7 @@ O projeto já está preparado: `vercel.json` (comando de build, pasta `dist`, ca
 **1. Publicar na Vercel**
 
 1. Em vercel.com, **Add New → Project**, importe o repositório `site-claudex`. A Vercel lê o `vercel.json`: Build Command `npm run build`, Output Directory `dist`. Não precisa mudar nada.
-2. Em **Settings → Environment Variables** (Production), defina:
+2. O endereço padrão já é `https://site-claudex.vercel.app/`, então **não precisa de nenhuma variável para funcionar**. Em **Settings → Environment Variables** (Production), defina só o que precisar:
 
 | Variável | Para quê | Exemplo |
 | --- | --- | --- |
@@ -113,7 +113,7 @@ O projeto já está preparado: `vercel.json` (comando de build, pasta `dist`, ca
 | `GOOGLE_SITE_VERIFICATION` | Código da meta tag de verificação do Search Console (só o valor de `content`). | `aBc123...` |
 | `BING_SITE_VERIFICATION` | Opcional. Código do Bing Webmaster (`msvalidate.01`). | `1A2B3C...` |
 
-   Se você **não** definir `SITE_URL`, o build usa o domínio de produção da Vercel (`VERCEL_PROJECT_PRODUCTION_URL`, algo como `claudex-site.vercel.app`). Para o Google, **o `SITE_URL` precisa ser o endereço que você vai cadastrar no Search Console**, senão o `canonical` aponta para outro lugar.
+   `SITE_URL` só é necessário se você ligar um **domínio próprio**. Nesse caso, ele precisa ser o endereço que você cadastrar no Search Console, senão o `canonical` aponta para outro lugar. `GOOGLE_SITE_VERIFICATION` é o único que você vai usar de fato agora.
 3. Se tiver domínio próprio, adicione em **Settings → Domains** e use esse endereço no `SITE_URL`. Depois de mudar variáveis, faça um **Redeploy** (elas só entram no build).
 4. Abra `https://SEU-SITE/sitemap.xml`, `/robots.txt` e `/og-image.png` para conferir que respondem 200 e que mostram o endereço certo.
 
@@ -134,25 +134,24 @@ O projeto já está preparado: `vercel.json` (comando de build, pasta `dist`, ca
 
 - [ ] Página abre, o vídeo toca depois do clique e o ícone aparece na aba.
 - [ ] Código-fonte da página (Ctrl+U) mostra o `<h1>` e o texto da landing.
-- [ ] `canonical` e `og:url` mostram o endereço final (não o do GitHub Pages).
+- [ ] `canonical` e `og:url` mostram o endereço final (`https://site-claudex.vercel.app/`, ou o domínio próprio, se houver).
 - [ ] [Teste de Resultados Rich](https://search.google.com/test/rich-results) reconhece `SoftwareApplication` e `FAQPage`.
 - [ ] Prévia de compartilhamento correta em [opengraph.xyz](https://www.opengraph.xyz/) e no WhatsApp.
 - [ ] PageSpeed Insights (mobile e desktop) sem alertas graves.
 
-### 3.0.1 Outras opções de publicação
+### 3.0.1 O que é o `canonical`
 
-O workflow `.github/workflows/pages.yml` continua publicando no GitHub Pages. Para usar só a Vercel, apague esse arquivo, para não existirem dois sites com o mesmo conteúdo (conteúdo duplicado atrapalha o ranqueamento).
-
+É uma tag no `<head>` (`<link rel="canonical" href="...">`) que diz ao Google qual é o endereço oficial da página. Se o mesmo conteúdo abrir em mais de um endereço (por exemplo `claudex.vercel.app` e um domínio próprio, com ou sem `www`, com `?utm=` na URL), o Google usa o `canonical` para juntar tudo num só resultado e não dividir a relevância entre cópias. Por isso o `SITE_URL` deve ser o endereço que você cadastra no Search Console.
 
 ### 3.1 Publicar
 
-1. Enviar o código ao repositório `site-claudex` (branch `main`). O workflow `.github/workflows/pages.yml` roda `npm run build` e publica `dist/` no GitHub Pages. Em Settings → Pages, escolha **Source: GitHub Actions**.
-2. Conferir que `https://diegoherreradasilva.github.io/site-claudex/og-image.png` e `/sitemap.xml` abrem.
+1. Enviar o código ao repositório `site-claudex` (branch `main`) e publicar pela Vercel (seção 3.0).
+2. Conferir que `/og-image.png` e `/sitemap.xml` abrem no endereço final.
 
 ### 3.2 Google Search Console e Bing Webmaster Tools
 
-1. Adicionar a propriedade de prefixo de URL `https://diegoherreradasilva.github.io/site-claudex/`. A verificação pode ser feita por meta tag no `<head>` ou por arquivo HTML em `public/`.
-2. Enviar o sitemap `https://diegoherreradasilva.github.io/site-claudex/sitemap.xml`.
+1. Adicionar a propriedade de prefixo de URL `https://site-claudex.vercel.app/`. A verificação pode ser feita por meta tag no `<head>` ou por arquivo HTML em `public/`.
+2. Enviar o sitemap `https://site-claudex.vercel.app/sitemap.xml`.
 3. Usar **Inspeção de URL → Solicitar indexação**.
 4. No Bing, importar a propriedade direto do Search Console. O Bing também alimenta o Copilot e o DuckDuckGo.
 

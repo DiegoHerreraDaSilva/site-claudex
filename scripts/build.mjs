@@ -72,13 +72,10 @@ await writeFile(resolve(out, 'index.html'), html)
 await cp(resolve(root, 'public'), out, { recursive: true }).catch(() => {})
 
 // ---- URL do site, datas e verificação dos buscadores (configurável por variável de ambiente) ----
-// SITE_URL define o endereço final (ex.: https://claudex.com.br). Na Vercel, se SITE_URL não existir,
-// usa o domínio de produção do projeto (VERCEL_PROJECT_PRODUCTION_URL). Sem nenhum dos dois, mantém o padrão.
-const DEFAULT_SITE_URL = 'https://diegoherreradasilva.github.io/site-claudex/'
+// O endereço padrão é o do site na Vercel. Se ligar um domínio próprio, defina SITE_URL (ex.: https://claudex.com.br).
+const DEFAULT_SITE_URL = 'https://site-claudex.vercel.app/'
 const withSlash = (url) => (url.endsWith('/') ? url : `${url}/`)
-const fromEnv = process.env.SITE_URL
-  || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : '')
-const siteUrl = withSlash((fromEnv || DEFAULT_SITE_URL).trim())
+const siteUrl = withSlash((process.env.SITE_URL || DEFAULT_SITE_URL).trim())
 const today = new Date().toISOString().slice(0, 10)
 
 const verification = []
